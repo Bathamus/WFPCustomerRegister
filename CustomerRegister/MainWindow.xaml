@@ -7,6 +7,22 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Margin="5">
+            <TextBlock x:Name="lblName" Text="First name:" Margin="5"></TextBlock>
+            <TextBox x:Name="txtFirstName" Margin="5"></TextBox>
+            <Button Width="100" Height="20" Margin="5" Click="AddCustomer_Click" Content="Add customer"></Button>
+        </StackPanel>
+        <ListView Margin="5" Grid.Column="1" SelectionChanged="Selector_OnSelectionChanged" 
+                  SelectedIndex="{Binding Path=SelectedIndexValue}" ItemsSource="{Binding}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="First name" DisplayMemberBinding="{Binding FirstName}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>

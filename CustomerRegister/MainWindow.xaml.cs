@@ -1,17 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CustomerRegister
 {
@@ -20,9 +11,38 @@ namespace CustomerRegister
     /// </summary>
     public partial class MainWindow : Window
     {
+        private ObservableCollection<Customer> Customers;
         public MainWindow()
         {
             InitializeComponent();
+            Customers = new ObservableCollection<Customer>
+            {
+                new Customer{ FirstName = "Andreas"}
+            };
+            DataContext = Customers;
+            
+        }
+
+        private void AddCustomer_Click(object sender, RoutedEventArgs e)
+        {
+            txtFirstName.Text.Trim();
+            if (txtFirstName.Text != string.Empty)
+            {
+                Customers.Add(new Customer
+                {
+                    FirstName = txtFirstName.Text
+                });
+                txtFirstName.Text = string.Empty;
+            }
+        }
+
+        private void Selector_OnSelectionChanged(object sender, RoutedEventArgs e)
+        {
+            Nullable<int>item = (sender as ListView).SelectedIndex;
+            if (item != null)
+            {
+                txtFirstName.Text = Customers[(int)item].FirstName;
+            }
         }
     }
 }
