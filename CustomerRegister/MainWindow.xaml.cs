@@ -15,12 +15,8 @@ namespace CustomerRegister
         public MainWindow()
         {
             InitializeComponent();
-            Customers = new ObservableCollection<Customer>
-            {
-                new Customer{ FirstName = "Andreas"}
-            };
-            DataContext = Customers;
-            
+            DbCommands cmd = new DbCommands();
+            DataContext = cmd.GetAllCustomers();
         }
 
         private void AddCustomer_Click(object sender, RoutedEventArgs e)
