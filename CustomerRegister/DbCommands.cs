@@ -24,7 +24,6 @@ namespace CustomerRegister
                 {
                     customersList.Add(ReadSingleRow((IDataRecord)reader));
                 }
-
                 connection.ConnectionClose();
             }
             else
@@ -37,21 +36,33 @@ namespace CustomerRegister
 
         public void AddCustomerToDb(Customer customer)
         {
+            var insertCommand = "INSERT INTO CUSTOMER (FirstName, LastName, Address, PhoneNumber," +
+                                " Email, DateOfBirth, CompanyName, NewsLetter, AdditionalNotes) values " +
+                                "(@firstName, @lastName, @address, @phoneNumber," +
+                                " @email, @dateOfBirth, @companyName, @newsLetter, @additionalNotes)";
+
             SqlConnect connection = new SqlConnect();
             connection.ConnectionOpen();
 
-            connection.ConnectionClose();
-
-            //string Get_Data = "SELECT * FROM Customer";
-
-            //SqlCommand cmd = new SqlCommand();
-            //cmd. = Get_Data;
-
-            //SqlDataAdapter sda = new SqlDataAdapter(cmd);
-            //DataTable dt = new DataTable("emp");
-            //sda.Fill(dt);
-
-            //dataGrid1.ItemsSource = dt.DefaultView;
+            if (connection != null && connection.State() == ConnectionState.Open)
+            {
+                var command = new SqlCommand(insertCommand, connection.SqlConnection);
+                command.Parameters.AddWithValue("@firstName", customer.FirstName);
+                command.Parameters.AddWithValue("@lastName", customer.LastName);
+                command.Parameters.AddWithValue("@address", customer.Address);
+                command.Parameters.AddWithValue("@phoneNumber", customer.PhoneNumber);
+                command.Parameters.AddWithValue("@email", customer.Email);
+                command.Parameters.AddWithValue("@dateOfBirth", customer.DateOfBirth);
+                command.Parameters.AddWithValue("@companyName", customer.CompanyName);
+                command.Parameters.AddWithValue("@newsLetter", customer.NewsLetter);
+                command.Parameters.AddWithValue("@additionalNotes", customer.AdditionalNotes);
+                command.ExecuteNonQuery();
+                connection.ConnectionClose();
+            }
+            else
+            {
+                MessageBox.Show("Cannot connect to database!");
+            }
         }
 
         private Customer ReadSingleRow(IDataRecord record)
@@ -59,7 +70,15 @@ namespace CustomerRegister
             return new Customer
             {
                 CustomerId = record.GetInt32(0),
-                FirstName = record.GetString(1)
+                FirstName = record.GetString(1),
+                LastName = record.GetString(2),
+                Address = record.GetString(3),
+                PhoneNumber = record.GetString(4),
+                Email = record.GetString(5),
+                DateOfBirth = record.GetDateTime(6),
+                CompanyName = record.GetString(7),
+                NewsLetter = record.GetBoolean(8),
+                AdditionalNotes = record.GetString(9)
             };
         }
     }

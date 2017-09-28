@@ -5,24 +5,58 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CustomerRegister"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="650" Width="1100">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
+        
         <StackPanel Margin="5">
-            <TextBlock x:Name="lblName" Text="First name:" Margin="5"></TextBlock>
+            <TextBlock x:Name="firstName" Text="First name:" Margin="5"></TextBlock>
             <TextBox x:Name="txtFirstName" Margin="5"></TextBox>
+            <TextBlock x:Name="lastName" Text="Last name:" Margin="5"></TextBlock>
+            <TextBox x:Name="txtLastName" Margin="5"></TextBox>
+            <TextBlock x:Name="address" Text="Address:" Margin="5"></TextBlock>
+            <TextBox x:Name="txtAddress" Margin="5"></TextBox>
+            <TextBlock x:Name="phoneNumber" Text="Phone number:" Margin="5"></TextBlock>
+            <TextBox x:Name="txtPhoneNumber" Margin="5"></TextBox>
+            <TextBlock x:Name="email" Text="Email:" Margin="5"></TextBlock>
+            <TextBox x:Name="txtEmail" Margin="5"></TextBox>
+            <TextBlock x:Name="dateOfBirth" Text="Date of birth:" Margin="5"></TextBlock>
+            <DatePicker x:Name="dpDateOfBirth"></DatePicker>
+            <StackPanel>
+                <RadioButton Name="btnBuisness" GroupName="CustomerSituation" Content="Buisness" Checked="CustomerSituation_Checked"/>
+                <RadioButton Name="btnPrivate" GroupName="CustomerSituation" Content="Private" Checked="CustomerSituation_Checked"/>
+            </StackPanel>
+            <TextBlock x:Name="companyName" Text="Comapny name:" Margin="5" IsEnabled="False"></TextBlock>
+            <TextBox x:Name="txtCompanyName" Margin="5"></TextBox>
+            <CheckBox x:Name="cbNewsLetter">Subscribe to news letter</CheckBox>
+            <TextBlock x:Name="additionalNotes" Text="Additional notes:" Margin="5"></TextBlock>
+            <TextBox x:Name="txtAdditionalNotes" Margin="5" Width="Auto" Height="100" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"></TextBox>
+
             <Button Width="100" Height="20" Margin="5" Click="AddCustomer_Click" Content="Add customer"></Button>
         </StackPanel>
-        <ListView Margin="5" Grid.Column="1" SelectionChanged="Selector_OnSelectionChanged" 
-                  SelectedIndex="{Binding Path=SelectedIndexValue}" ItemsSource="{Binding}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="First name" DisplayMemberBinding="{Binding FirstName}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <StackPanel Grid.Column="1">
+            <TextBlock x:Name="search" Text="Search" Margin="5"></TextBlock>
+            <TextBox x:Name="txtSearch" KeyUp="txtSearch_KeyUp" Margin="5"></TextBox>
+            <ComboBox x:Name="cbxSearch" Loaded="ComboBox_Loaded"></ComboBox>
+            <ListView Margin="5" Grid.Column="1" SelectionChanged="Selector_OnSelectionChanged" 
+                      ItemsSource="{Binding}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="First name" DisplayMemberBinding="{Binding FirstName}"/>
+                        <GridViewColumn Header="Last name" DisplayMemberBinding="{Binding LastName}"/>
+                        <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Address}"/>
+                        <GridViewColumn Header="Phone number" DisplayMemberBinding="{Binding PhoneNumber}"/>
+                        <GridViewColumn Header="Email" DisplayMemberBinding="{Binding Email}"/>
+                        <GridViewColumn Header="Date of birth" DisplayMemberBinding="{Binding DateOfBirth, StringFormat='yyyy-MM-dd'}"/>
+                        <GridViewColumn Header="Company name" DisplayMemberBinding="{Binding CompanyName}"/>
+                        <GridViewColumn Header="Receives newsletter" DisplayMemberBinding="{Binding NewsLetter}"/>
+                        <GridViewColumn Header="Additional notes" DisplayMemberBinding="{Binding AdditionalNotes}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -12,11 +13,11 @@ namespace CustomerRegister
     public partial class MainWindow : Window
     {
         private ObservableCollection<Customer> Customers;
+        DbCommands cmd = new DbCommands();
         public MainWindow()
         {
             InitializeComponent();
-            DbCommands cmd = new DbCommands();
-            DataContext = cmd.GetAllCustomers();
+            UpdateCustomerList();
         }
 
         private void AddCustomer_Click(object sender, RoutedEventArgs e)
@@ -24,21 +25,105 @@ namespace CustomerRegister
             txtFirstName.Text.Trim();
             if (txtFirstName.Text != string.Empty)
             {
-                Customers.Add(new Customer
-                {
-                    FirstName = txtFirstName.Text
-                });
-                txtFirstName.Text = string.Empty;
+                cmd.AddCustomerToDb(CreateCustomer());
+                ClearForm();
+                UpdateCustomerList();
             }
         }
 
         private void Selector_OnSelectionChanged(object sender, RoutedEventArgs e)
         {
-            Nullable<int>item = (sender as ListView).SelectedIndex;
-            if (item != null)
+            var customer = (sender as ListView).SelectedIndex;
+            if (customer >= 0)
             {
-                txtFirstName.Text = Customers[(int)item].FirstName;
+                txtFirstName.Text = Customers[customer].FirstName;
+                txtLastName.Text = Customers[customer].LastName;
+                txtAddress.Text = Customers[customer].Address;
+                txtPhoneNumber.Text = Customers[customer].PhoneNumber;
+                txtEmail.Text = Customers[customer].Email;
+                dpDateOfBirth.SelectedDate = Customers[customer].DateOfBirth;
+                txtCompanyName.Text = Customers[customer].CompanyName;
+                cbNewsLetter.IsChecked = Customers[customer].NewsLetter;
+                txtAdditionalNotes.Text = Customers[customer].AdditionalNotes;
             }
+        }
+
+        private void UpdateCustomerList()
+        {
+            Customers = cmd.GetAllCustomers();
+            DataContext = Customers;
+        }
+
+        private void txtSearch_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            var cbxSelect = cbxSearch.SelectedItem.ToString();
+            var list = new List<Customer>();
+
+            switch (cbxSelect)
+            {
+                case "Email":
+                    list = Customers.Where(x => x.Email.Contains(txtSearch.Text)).ToList();
+                    break;
+                case "Phone number":
+                    list = Customers.Where(x => x.PhoneNumber.Contains(txtSearch.Text)).ToList();
+                    break;
+                default:
+                    list = Customers.ToList();
+                    break;
+            }
+
+            DataContext = list;
+        }
+
+        private void ComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            cbxSearch.ItemsSource = new List<string>
+            {
+                "Email",
+                "Phone number",
+            };
+            cbxSearch.SelectedIndex = 0;
+
+        }
+
+        private void CustomerSituation_Checked(object sender, RoutedEventArgs e)
+        {
+            if (btnBuisness.IsChecked == true)
+                txtCompanyName.IsEnabled = true;
+
+            else
+                txtCompanyName.IsEnabled = false;
+        }
+
+        private Customer CreateCustomer()
+        {
+            return new Customer
+            {
+                FirstName = txtFirstName.Text,
+                LastName = txtLastName.Text,
+                Address = txtAddress.Text,
+                PhoneNumber = txtPhoneNumber.Text,
+                Email = txtEmail.Text,
+                DateOfBirth = (DateTime)dpDateOfBirth.SelectedDate,
+                CompanyName = txtCompanyName.Text,
+                NewsLetter = (Boolean)cbNewsLetter.IsChecked,
+                AdditionalNotes = txtAdditionalNotes.Text
+            };
+        }
+
+        private void ClearForm()
+        {
+            txtFirstName.Text = string.Empty;
+            txtLastName.Text = string.Empty;
+            txtAddress.Text = string.Empty;
+            txtPhoneNumber.Text = string.Empty;
+            txtEmail.Text = string.Empty;
+            dpDateOfBirth.SelectedDate = null;
+            btnBuisness.IsChecked = false;
+            btnPrivate.IsChecked = false;
+            txtCompanyName.Text = null;
+            cbNewsLetter.IsChecked = false;
+            txtAdditionalNotes.Text = string.Empty;
         }
     }
 }
