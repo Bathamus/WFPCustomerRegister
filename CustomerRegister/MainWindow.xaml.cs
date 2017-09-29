@@ -13,6 +13,8 @@ namespace CustomerRegister
     public partial class MainWindow : Window
     {
         private ObservableCollection<Customer> Customers;
+        private List<Customer> RenderListToView;
+
         DbCommands cmd = new DbCommands();
         public MainWindow()
         {
@@ -36,43 +38,43 @@ namespace CustomerRegister
             var customer = (sender as ListView).SelectedIndex;
             if (customer >= 0)
             {
-                txtFirstName.Text = Customers[customer].FirstName;
-                txtLastName.Text = Customers[customer].LastName;
-                txtAddress.Text = Customers[customer].Address;
-                txtPhoneNumber.Text = Customers[customer].PhoneNumber;
-                txtEmail.Text = Customers[customer].Email;
-                dpDateOfBirth.SelectedDate = Customers[customer].DateOfBirth;
-                txtCompanyName.Text = Customers[customer].CompanyName;
-                cbNewsLetter.IsChecked = Customers[customer].NewsLetter;
-                txtAdditionalNotes.Text = Customers[customer].AdditionalNotes;
+                txtFirstName.Text = RenderListToView[customer].FirstName;
+                txtLastName.Text = RenderListToView[customer].LastName;
+                txtAddress.Text = RenderListToView[customer].Address;
+                txtPhoneNumber.Text = RenderListToView[customer].PhoneNumber;
+                txtEmail.Text = RenderListToView[customer].Email;
+                dpDateOfBirth.SelectedDate = RenderListToView[customer].DateOfBirth;
+                txtCompanyName.Text = RenderListToView[customer].CompanyName;
+                cbNewsLetter.IsChecked = RenderListToView[customer].NewsLetter;
+                txtAdditionalNotes.Text = RenderListToView[customer].AdditionalNotes;
             }
         }
 
         private void UpdateCustomerList()
         {
             Customers = cmd.GetAllCustomers();
-            DataContext = Customers;
+            RenderListToView = Customers.ToList();
+            DataContext = RenderListToView;
         }
 
         private void txtSearch_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             var cbxSelect = cbxSearch.SelectedItem.ToString();
-            var list = new List<Customer>();
 
             switch (cbxSelect)
             {
                 case "Email":
-                    list = Customers.Where(x => x.Email.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
+                    RenderListToView = Customers.Where(x => x.Email.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
                     break;
                 case "Phone number":
-                    list = Customers.Where(x => x.PhoneNumber.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
+                    RenderListToView = Customers.Where(x => x.PhoneNumber.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
                     break;
                 default:
-                    list = Customers.ToList();
+                    RenderListToView = Customers.ToList();
                     break;
             }
 
-            DataContext = list;
+            DataContext = RenderListToView;
         }
 
         private void ComboBox_Loaded(object sender, RoutedEventArgs e)
