@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:CustomerRegister"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary Source="Resources/ResourceCustomerRegister.xaml"/>
     </Application.Resources>
 </Application>

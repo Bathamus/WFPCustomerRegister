@@ -62,10 +62,10 @@ namespace CustomerRegister
             switch (cbxSelect)
             {
                 case "Email":
-                    list = Customers.Where(x => x.Email.Contains(txtSearch.Text)).ToList();
+                    list = Customers.Where(x => x.Email.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
                     break;
                 case "Phone number":
-                    list = Customers.Where(x => x.PhoneNumber.Contains(txtSearch.Text)).ToList();
+                    list = Customers.Where(x => x.PhoneNumber.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
                     break;
                 default:
                     list = Customers.ToList();
@@ -90,7 +90,7 @@ namespace CustomerRegister
         {
             if (btnBuisness.IsChecked == true)
                 txtCompanyName.IsEnabled = true;
-
+                //txtCompanyName.Style
             else
                 txtCompanyName.IsEnabled = false;
         }
@@ -124,6 +124,11 @@ namespace CustomerRegister
             txtCompanyName.Text = null;
             cbNewsLetter.IsChecked = false;
             txtAdditionalNotes.Text = string.Empty;
+        }
+
+        private void ResetForm_Click(object sender, RoutedEventArgs e)
+        {
+            ClearForm();
         }
     }
 }
