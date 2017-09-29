@@ -85,14 +85,12 @@ namespace CustomerRegister
                 "Phone number",
             };
             cbxSearch.SelectedIndex = 0;
-
         }
 
         private void CustomerSituation_Checked(object sender, RoutedEventArgs e)
         {
             if (btnBuisness.IsChecked == true)
                 txtCompanyName.IsEnabled = true;
-                //txtCompanyName.Style
             else
                 txtCompanyName.IsEnabled = false;
         }
